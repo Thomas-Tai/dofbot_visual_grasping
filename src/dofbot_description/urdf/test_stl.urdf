@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="test_cube">
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0.025" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="file:///home/nv-sky/ros_projects/visual_grasping_ws/src/dofbot_description/meshes/test_cube.STL"/>
+            </geometry>
+            <material name="red">
+                <color rgba="1 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+</robot>
