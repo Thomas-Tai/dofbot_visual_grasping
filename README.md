@@ -30,11 +30,21 @@ visual_grasping_ws/
 │   │   ├── meshes/               # STL網格模型
 │   │   └── launch/               # 啟動文件
 │   │
-│   └── dofbot_moveit_config/     # MoveIt2配置包
-│       ├── config/               # 配置文件
-│       │   ├── dofbot.srdf       # MoveIt語義配置
-│       │   └── kinematics.yaml   # 運動學配置
-│       └── launch/               # MoveIt啟動文件
+│   ├── dofbot_moveit_config/     # MoveIt2配置包
+│   │   ├── config/               # 配置文件
+│   │   │   ├── dofbot.srdf       # MoveIt語義配置
+│   │   │   └── kinematics.yaml   # 運動學配置
+│   │   └── launch/               # MoveIt啟動文件
+│   │
+│   └── dofbot_vision/            # 視覺感知包
+│       ├── dofbot_vision/
+│       │   ├── vision_processor.py      # HSV顏色檢測
+│       │   ├── object_detector_node.py  # 目標檢測節點
+│       │   ├── coordinate_transform_node.py  # 坐標變換
+│       │   ├── calibrate_hsv.py         # HSV標定工具
+│       │   └── calibration_tool.py      # 手眼標定工具
+│       ├── config/               # HSV配置文件
+│       └── launch/               # 視覺啟動文件
 │
 ├── docs/                         # 專案文檔
 │   ├── todolist.md               # 詳細任務列表
@@ -151,6 +161,29 @@ ros2 run dofbot_control test_motion
 ros2 run dofbot_control test_cartesian
 ```
 
+### 4. 啟動視覺系統
+
+```bash
+# 啟動相機
+ros2 launch dofbot_vision camera.launch.py
+
+# 啟動視覺檢測節點
+ros2 launch dofbot_vision vision.launch.py
+
+# 啟動完整視覺管道（相機 + 檢測 + 坐標變換）
+ros2 launch dofbot_vision vision_pipeline.launch.py
+```
+
+### 5. HSV 顏色標定工具
+
+```bash
+# 啟動互動式標定工具
+ros2 run dofbot_vision calibrate-hsv --color green
+
+# 手眼標定工具
+ros2 run dofbot_vision calibrate-handeye
+```
+
 ---
 
 ## 📊 開發進度
@@ -162,15 +195,16 @@ ros2 run dofbot_control test_cartesian
 - [x] 運動控制介面開發
 - [x] 混合 IK 策略（ikpy + MoveIt2）
 
-### 🚧 第二階段：視覺系統（進行中）
+### ✅ 第二階段：視覺系統（已完成）
 
-- [ ] 相機驅動安裝與配置
-- [ ] `dofbot_vision` 包開發
-- [ ] HSV 顏色標定工具
-- [ ] 目標檢測節點
-- [ ] 手眼標定
+- [x] 相機驅動安裝與配置
+- [x] `dofbot_vision` 包開發
+- [x] HSV 顏色標定工具
+- [x] 目標檢測節點
+- [x] 手眼標定工具
+- [x] 坐標變換節點
 
-### ⏳ 第三階段：真機整合（計劃中）
+### 🚧 第三階段：真機整合（待開始）
 
 - [ ] 舵機驅動逆向工程
 - [ ] `dofbot_hardware` 包開發
