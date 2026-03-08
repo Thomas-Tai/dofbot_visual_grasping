@@ -1,9 +1,13 @@
 # Copyright (c) 2024 DOFBOT Project
 # SPDX-License-Identifier: BSD-3-Clause
 
-from setuptools import find_packages, setup
+"""Setup script for the dofbot_hardware package."""
 
-package_name = 'dofbot_control'
+from glob import glob
+import os
+from setuptools import setup, find_packages
+
+package_name = 'dofbot_hardware'
 
 setup(
     name=package_name,
@@ -13,24 +17,20 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        # Launch files
+        (os.path.join('share', package_name, 'launch'),
+            glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='DOFBOT Project',
     maintainer_email='dofbot@example.com',
-    description='Motion control package for DOFBOT robot arm',
+    description='Hardware interface package for DOFBOT robot arm',
     license='BSD-3-Clause',
-    extras_require={
-        'test': [
-            'pytest',
-        ],
-    },
+    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'test_motion = dofbot_control.test_motion:main',
-            'test_cartesian = dofbot_control.test_cartesian:main',
-            'test_vision_motion = dofbot_control.test_vision_motion_integration:main',
-            'pick_place_demo = dofbot_control.pick_place_demo:main',
+            'safety_monitor = dofbot_hardware.safety_monitor:main',
         ],
     },
 )

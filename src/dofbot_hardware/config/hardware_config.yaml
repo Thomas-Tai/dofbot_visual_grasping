@@ -1,0 +1,71 @@
+# DOFBOT Hardware Configuration
+# This file contains default parameters for the hardware interface
+
+# Hardware mode
+hardware:
+  use_mock: true  # Set to false when using real hardware
+  publish_rate: 50.0  # Hz - Joint state publishing rate
+  
+# Joint names (must match URDF)
+joint_names:
+  - joint1
+  - joint2
+  - joint3
+  - joint4
+  - joint5
+  - gripper
+
+# Safety parameters
+safety:
+  enabled: true
+  velocity_scaling: 0.5  # Scale down velocities for safety (0.0-1.0)
+  max_velocity: 1.0  # rad/s - Maximum joint velocity
+  max_position_error: 0.1  # radians - Maximum allowed position error
+  heartbeat_timeout: 1.0  # seconds - Timeout for heartbeat monitoring
+  
+# Joint limits (radians)
+# DOFBOT servos have 0-180° range, center at 90°
+# Converted to radians: -π/2 to +π/2
+joint_limits:
+  joint1:
+    min: -1.5708  # -π/2
+    max: 1.5708   # π/2
+    velocity_max: 1.0
+  joint2:
+    min: -1.5708
+    max: 1.5708
+    velocity_max: 1.0
+  joint3:
+    min: -1.5708
+    max: 1.5708
+    velocity_max: 1.0
+  joint4:
+    min: -1.5708
+    max: 1.5708
+    velocity_max: 1.0
+  joint5:
+    min: -1.5708
+    max: 1.5708
+    velocity_max: 1.0
+  gripper:
+    min: -0.5
+    max: 0.5
+    velocity_max: 0.5
+
+# Communication parameters
+communication:
+  timeout: 0.1  # seconds - Read timeout
+  max_retries: 3
+  retry_base_delay: 0.01  # seconds - Base delay for exponential backoff
+
+# Velocity estimation parameters
+velocity_estimation:
+  alpha: 0.3  # Low-pass filter coefficient (0-1)
+  max_velocity: 2.0  # rad/s - Maximum expected velocity for sanity check
+
+# Trajectory execution parameters
+trajectory:
+  default_execution_time_ms: 500
+  enable_position_monitoring: true
+  enable_velocity_limiting: true
+  interpolation_step_ms: 20
