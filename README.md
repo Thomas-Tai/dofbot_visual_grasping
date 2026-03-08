@@ -11,7 +11,8 @@
 - 🦾 機械臂運動控制（MoveIt2 + 自定義IK求解器）
 - 📷 視覺檢測系統（OpenCV 顏色識別）
 - 🎯 手眼標定（像素坐標到世界坐標轉換）
-- 🤖 真機硬體介面（開發中）
+- 🤖 真機硬體介面（dofbot_hardware 包）
+- 🔄 Sim-to-Real 無縫切換（統一運動介面）
 
 ---
 
@@ -22,7 +23,9 @@ visual_grasping_ws/
 ├── src/                          # 源代碼目錄
 │   ├── dofbot_control/           # 運動控制包
 │   │   └── dofbot_control/
-│   │       └── moveit_interface.py   # MoveIt介面類
+│   │       ├── moveit_interface.py   # MoveIt介面類
+│   │       ├── unified_interface.py  # 統一運動介面
+│   │       └── pick_place_demo.py    # 抓取演示
 │   │
 │   ├── dofbot_description/       # 機器人描述包
 │   │   ├── urdf/                 # URDF模型文件
@@ -36,15 +39,25 @@ visual_grasping_ws/
 │   │   │   └── kinematics.yaml   # 運動學配置
 │   │   └── launch/               # MoveIt啟動文件
 │   │
-│   └── dofbot_vision/            # 視覺感知包
-│       ├── dofbot_vision/
-│       │   ├── vision_processor.py      # HSV顏色檢測
-│       │   ├── object_detector_node.py  # 目標檢測節點
-│       │   ├── coordinate_transform_node.py  # 坐標變換
-│       │   ├── calibrate_hsv.py         # HSV標定工具
-│       │   └── calibration_tool.py      # 手眼標定工具
-│       ├── config/               # HSV配置文件
-│       └── launch/               # 視覺啟動文件
+│   ├── dofbot_vision/            # 視覺感知包
+│   │   ├── dofbot_vision/
+│   │   │   ├── vision_processor.py      # HSV顏色檢測
+│   │   │   ├── object_detector_node.py  # 目標檢測節點
+│   │   │   ├── coordinate_transform_node.py  # 坐標變換
+│   │   │   ├── calibrate_hsv.py         # HSV標定工具
+│   │   │   └── calibration_tool.py      # 手眼標定工具
+│   │   ├── config/               # HSV配置文件
+│   │   └── launch/               # 視覺啟動文件
+│   │
+│   └── dofbot_hardware/          # 硬體介面包
+│       ├── dofbot_hardware/
+│       │   ├── arm_driver.py         # 真機驅動
+│       │   ├── mock_driver.py        # 模擬驅動
+│       │   ├── hardware_node.py      # ROS2生命週期節點
+│       │   ├── trajectory_executor.py # 軌跡執行器
+│       │   └── safety_monitor.py     # 安全監控
+│       ├── config/               # 硬體配置
+│       └── launch/               # 硬體啟動文件
 │
 ├── docs/                         # 專案文檔
 │   ├── todolist.md               # 詳細任務列表
@@ -184,6 +197,53 @@ ros2 run dofbot_vision calibrate-hsv --color green
 ros2 run dofbot_vision calibrate-handeye
 ```
 
+### 6. 硬體介面系統（Phase 3）
+
+```bash
+# 啟動模擬硬體節點（用於測試）
+ros2 launch dofbot_hardware hardware.launch.py use_mock:=true
+
+# 啟動真機硬體節點
+ros2 launch dofbot_hardware hardware.launch.py use_mock:=false
+
+# 啟動完整系統（硬體 + 安全監控）
+ros2 launch dofbot_hardware full_system.launch.py
+```
+
+### 7. 統一運動介面
+
+```python
+#!/usr/bin/env python3
+from dofbot_control.unified_interface import create_interface
+
+# 創建模擬介面
+sim_interface = create_interface(mode='simulation')
+sim_interface.connect()
+sim_interface.move_to_named_pose('home')
+
+# 創建真機介面
+hardware_interface = create_interface(mode='hardware')
+hardware_interface.connect()
+hardware_interface.move_to_named_pose('home')
+
+# 控制夾爪
+interface.set_gripper(closed=True)   # 閉合
+interface.set_gripper(closed=False)  # 張開
+```
+
+### 8. 端到端抓取演示
+
+```bash
+# 模擬模式抓取演示
+ros2 run dofbot_control pick_place_demo --color green --mode simulation
+
+# 真機模式抓取演示
+ros2 run dofbot_control pick_place_demo --color green --mode hardware
+
+# 自定義放置位置
+ros2 run dofbot_control pick_place_demo --place-x 0.2 --place-y -0.1
+```
+
 ---
 
 ## 📊 開發進度
@@ -204,12 +264,21 @@ ros2 run dofbot_vision calibrate-handeye
 - [x] 手眼標定工具
 - [x] 坐標變換節點
 
-### 🚧 第三階段：真機整合（待開始）
+### ✅ 第三階段：真機整合（已完成）
 
-- [ ] 舵機驅動逆向工程
-- [ ] `dofbot_hardware` 包開發
-- [ ] ros2_control 硬體介面
-- [ ] 端到端抓取演示
+- [x] `dofbot_hardware` 包開發
+- [x] DofbotDriver 真機驅動（Arm_Lib）
+- [x] MockDofbotDriver 模擬驅動
+- [x] ROS2 生命週期硬體節點
+- [x] 軌跡執行器與安全監控
+- [x] 統一運動介面（Sim-to-Real 切換）
+- [x] 端到端抓取演示腳本
+
+### 🚧 第四階段：系統優化（進行中）
+
+- [ ] 完整系統整合測試
+- [ ] 真機抓取驗證
+- [ ] 性能優化與調參
 
 ---
 
@@ -245,7 +314,25 @@ ros2 run dofbot_vision calibrate-handeye
 │   └───────────────────────────────────────────────────┘    │
 │                                        │                    │
 │                                        ▼                    │
-│                              [硬體介面] ──► [DOFBOT舵機]    │
+│   ┌───────────────────────────────────────────────────┐    │
+│   │           Unified Motion Interface                 │    │
+│   │  ┌─────────────────┐    ┌─────────────────────┐  │    │
+│   │  │  Mock Driver    │    │  DofbotDriver       │  │    │
+│   │  │  (模擬)         │    │  (真機 Arm_Lib)     │  │    │
+│   │  └─────────────────┘    └─────────────────────┘  │    │
+│   └───────────────────────────────────────────────────┘    │
+│                                        │                    │
+│                                        ▼                    │
+│   ┌───────────────────────────────────────────────────┐    │
+│   │           Hardware Interface Layer                 │    │
+│   │  ┌─────────────────┐    ┌─────────────────────┐  │    │
+│   │  │ Safety Monitor  │    │ Trajectory Executor │  │    │
+│   │  │ (安全監控)      │    │ (軌跡執行)          │  │    │
+│   │  └─────────────────┘    └─────────────────────┘  │    │
+│   └───────────────────────────────────────────────────┘    │
+│                                        │                    │
+│                                        ▼                    │
+│                              [DOFBOT 舵機]                  │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
