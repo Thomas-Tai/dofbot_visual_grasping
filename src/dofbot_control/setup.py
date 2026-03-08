@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'test_motion = dofbot_control.test_motion:main',
             'test_cartesian = dofbot_control.test_cartesian:main',
+            'test_vision_motion = dofbot_control.test_vision_motion_integration:main',
         ],
     },
 )
