@@ -1,0 +1,32 @@
+# HSV color thresholds for red object detection
+# Values are in OpenCV format: H(0-180), S(0-255), V(0-255)
+#
+# Note: Red wraps around the hue spectrum in OpenCV, requiring two ranges:
+# - Lower red: H = 0-10
+# - Upper red: H = 170-180
+# The vision processor handles this automatically when color_name starts with 'red'
+
+red:
+  h_min: 0
+  h_max: 10
+  s_min: 100
+  s_max: 255
+  v_min: 100
+  v_max: 255
+  description: "Red blocks for pick-and-place"
+  last_updated: "2026-03-08"
+
+# Secondary range for red (hue wrap-around)
+# This is handled internally by the VisionProcessor
+red_high:
+  h_min: 170
+  h_max: 180
+  s_min: 100
+  s_max: 255
+  v_min: 100
+  v_max: 255
+
+# Tuning tips:
+# - Red is challenging because it spans the H boundary (0 and 180 are both red)
+# - Lower S_min for pink/light red objects
+# - Adjust V range for lighting conditions

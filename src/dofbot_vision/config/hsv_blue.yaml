@@ -1,0 +1,25 @@
+# HSV Color Configuration for Blue Objects
+# Used for detecting blue blocks in DOFBOT pick-and-place operations
+#
+# HSV Range in OpenCV:
+#   H (Hue): 0-180 (half of typical 0-360 range)
+#   S (Saturation): 0-255
+#   V (Value): 0-255
+#
+# To calibrate: ros2 run dofbot_vision calibrate-hsv --color blue
+
+blue:
+  h_min: 100
+  h_max: 130
+  s_min: 50
+  s_max: 255
+  v_min: 50
+  v_max: 255
+  description: "Blue blocks for pick-and-place"
+  last_updated: "2026-03-08"
+
+# Usage tips:
+# - Blue hue range is typically 100-130 in OpenCV
+# - Adjust h_min/h_max if blue appears too purple or too cyan
+# - Increase s_min to avoid detecting pale blue/white areas
+# - Blue may require lower v_min if in shadows

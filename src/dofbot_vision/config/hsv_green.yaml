@@ -1,0 +1,24 @@
+# HSV Color Configuration for Green Objects
+# Used for detecting green blocks in DOFBOT pick-and-place operations
+#
+# HSV Range in OpenCV:
+#   H (Hue): 0-180 (half of typical 0-360 range)
+#   S (Saturation): 0-255
+#   V (Value): 0-255
+#
+# To calibrate: ros2 run dofbot_vision calibrate-hsv --color green
+
+green:
+  h_min: 35
+  h_max: 85
+  s_min: 50
+  s_max: 255
+  v_min: 50
+  v_max: 255
+  description: "Green blocks for pick-and-place"
+  last_updated: "2026-03-08"
+
+# Usage tips:
+# - Adjust h_min/h_max if green appears too yellow or too blue
+# - Increase s_min if detecting white/gray areas
+# - Increase v_min if detecting shadows

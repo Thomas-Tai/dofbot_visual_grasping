@@ -1,0 +1,33 @@
+# Homography matrix for camera-to-robot coordinate transformation
+# This matrix transforms pixel coordinates (u, v) to world coordinates (x, y)
+# 
+# Usage:
+#   world_point = H * pixel_point (in homogeneous coordinates)
+#   where pixel_point = [u, v, 1]^T and world_point = [x', y', w']^T
+#   actual world coordinates: x = x'/w', y = y'/w'
+#
+# Calibration procedure:
+#   1. Place calibration markers at known world positions
+#   2. Record corresponding pixel positions in camera view
+#   3. Use cv2.findHomography() or the calibrate-handeye tool
+#   4. Save the resulting matrix here
+#
+# Note: This is a placeholder identity matrix. Run calibration to get actual values.
+
+homography:
+  - [1.0, 0.0, 0.0]
+  - [0.0, 1.0, 0.0]
+  - [0.0, 0.0, 1.0]
+
+calibration_type: "homography"
+timestamp: "2026-03-08"
+num_points: 0
+
+# Calibration reference points (for documentation)
+# These would be filled in during actual calibration
+reference_points: []
+
+# Notes:
+# - Units should be in meters for world coordinates
+# - The homography assumes objects are on a planar surface (Z=0)
+# - For 3D transformations, use hand-eye calibration instead
