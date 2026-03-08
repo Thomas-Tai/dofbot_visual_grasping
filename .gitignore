@@ -3,3 +3,9 @@ install/
 log/
 docs/
 *.zip
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
