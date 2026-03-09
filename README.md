@@ -384,13 +384,6 @@ ls src/dofbot_description/meshes/
 
 ---
 
-## 📞 聯繫方式
-
-- **維護者**: nv-sky
-- **郵箱**: thomastai.uni@gmail.com
-
----
-
 ## 🙏 致謝
 
 - 原始 DOFBOT ROS1 代碼位於 `reference/dofbot_ros1_source/`
